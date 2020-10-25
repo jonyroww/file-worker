@@ -40,8 +40,16 @@ const replaceDbRefreshToken = async (tokenId, userId) => {
     }
 }
 
+const verifyToken = async (req) => {
+    const authHeader = req.get('Authorization');
+    const token = authHeader.replace('Bearer ', '');
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    return payload.userId;
+}
+
 module.exports = {
     generateAccessToken,
     generateRefreshToken,
-    replaceDbRefreshToken
+    replaceDbRefreshToken,
+    verifyToken
 }

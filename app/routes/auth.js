@@ -5,12 +5,17 @@ const authHelper = require('../helpers/authHelper');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const db = require("../../DB/models");
+const authMiddleware = require('../middleware/authMiddleware');
 const User = db.users;
 const Token = db.tokens;
 
 
 router.post('/signup', async (req, res) => {
     const {email, password} = req.body;
+    if (!email || !password){
+        res.status(400).json({message: 'You need to provide email and password!'});
+            return;
+    }
     try {
         const userExist = await User.findOne({where: {email: email.trim()}});
         if (userExist) {
@@ -33,6 +38,10 @@ router.post('/signup', async (req, res) => {
 
 router.post('/signin', async (req, res) => {
     const {email, password} = req.body;
+    if (!email || !password){
+        res.status(400).json({message: 'You need to provide email and password!'});
+        return;
+    }
     try {
     const user = await User.findOne({where: {email: email.trim()}});
     if (!user) {
@@ -52,6 +61,10 @@ router.post('/signin', async (req, res) => {
 
 router.post('/signin/new_token', async (req, res) => {
     const { refreshToken } =  req.body;
+    if (!refreshToken){
+        res.status(400).json({message: 'You need to provide refreshToken!'});
+        return;
+    }
     let payload;
     try {
         payload = jwt.verify(refreshToken, process.env.JWT_SECRET);
@@ -78,6 +91,33 @@ router.post('/signin/new_token', async (req, res) => {
             throw new Error("Invalid token!");
         }
         return await updateTokens(token.userId).then(tokens => res.status(201).json(tokens));
+    } catch (err){
+        res.status(500).json({message: err.message});
+    }
+})
+
+router.get('/info', authMiddleware, async (req, res) => {
+    try {
+        const userId = await authHelper.verifyToken(req);
+        console.log(userId);
+        const user = await User.findOne({where:{id: userId}});
+        if (!user) {
+            res.status(404).json({message: "No such user!"});
+            return;
+        }
+        res.status(200).json({email: user.email})
+    } catch (err) {
+        res.status(500).json({message: err.message});
+    }
+});
+
+router.get('/logout', authMiddleware, async (req, res) => {
+    try {
+        const userId = await authHelper.verifyToken(req);
+        const newRefreshToken = authHelper.generateRefreshToken();
+        await Token.destroy({where: {userId}})
+        .then(() => Token.create({tokenId: newRefreshToken.token, userId}));
+        res.status(200).json({refreshToken: newRefreshToken.token});
     } catch (err){
         res.status(500).json({message: err.message});
     }
