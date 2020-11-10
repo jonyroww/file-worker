@@ -4,9 +4,8 @@ module.exports = {
     await queryInterface.createTable('FileInfos', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID,
       },
       title: {
         type: Sequelize.STRING

@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const db = require("../../DB/models");
 const authMiddleware = require("../middleware/authMiddleware");
+const { v4: uuidv4 } = require('uuid');
 const User = db.users;
 const Token = db.tokens;
 
@@ -25,9 +26,9 @@ router.post("/signup", async (req, res) => {
 		}
 		const salt = await bcrypt.genSalt();
 		const hashedPassword = await bcrypt.hash(password, salt);
-		const user = await User.create({ email, passwordHash: hashedPassword });
+		const user = await User.create({id: uuidv4(), email, passwordHash: hashedPassword });
 		const token = authHelper.generateRefreshToken();
-		await Token.create({ tokenId: token.id, userId: user.id });
+		await Token.create({id: uuidv4(), tokenId: token.id, userId: user.id });
 		res.status(201).json({
 			accessToken: authHelper.generateAccessToken(user.id),
 			refreshToken: token.token,
@@ -123,7 +124,7 @@ router.get("/logout", authMiddleware, async (req, res) => {
 		const userId = await authHelper.verifyToken(req);
 		const newRefreshToken = authHelper.generateRefreshToken();
 		await Token.destroy({ where: { userId } }).then(() =>
-			Token.create({ tokenId: newRefreshToken.token, userId })
+			Token.create({id: uuidv4(), tokenId: newRefreshToken.token, userId })
 		);
 		res.status(200).json({ refreshToken: newRefreshToken.token });
 	} catch (err) {

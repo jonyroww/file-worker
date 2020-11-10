@@ -1,0 +1,432 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"version": "1.0.0",
+		"title": "My File Worker  CRUD",
+		"description": "File Worker Application API",
+		"license": {
+			"name": "MIT",
+			"url": "https://opensource.org/licenses/MIT"
+		}
+	},
+	"host": "localhost",
+	"basePath": "/",
+	"tags": [
+		{
+			"name": "Auth",
+			"description": "Auth paths"
+		},
+		{
+			"name": "Files",
+			"description": "Paths for work with files"
+		}
+	],
+	"schemes": ["http"],
+	"consumes": ["application/json"],
+	"produces": ["application/json"],
+	"paths": {
+		"auth/signup": {
+			"post": {
+				"tags": ["Auth"],
+				"description": "Create new user in system",
+				"parameters": [
+					{
+						"name": "email",
+						"in": "body",
+						"description": "User email",
+						"type": "string"
+					},
+					{
+						"name": "password",
+						"in": "body",
+						"description": "User password",
+						"type": "string"
+					}
+				],
+				"produces": ["application/json"],
+				"responses": {
+					"201": {
+						"description": "New user is created",
+						"schema": {
+							"type": "object",
+							"example": {
+								"accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE2MDQ5MTEzNTAsImV4cCI6MTYwNDkxMTk1MH0.h3pqwmzekV97C2_w-EC-_ggliFr5yxuf95rTPTzhDvo",
+								"refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM4OGQ4N2UwLWNiY2MtNDhlNC1iYWQ3LTkzOTkxMjEyZjNjMiIsInR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNjA0OTExMzUwLCJleHAiOjE2MDQ5MTMxNTB9.rka1KnzzlDw6bvNgIRD6dLl8bqMLHxaM0Ck0KKRboHA"
+							}
+						}
+					}
+				}
+			}
+		},
+		"auth/signin": {
+			"post": {
+				"tags": ["Auth"],
+				"description": "Sign in path",
+				"parameters": [
+					{
+						"name": "email",
+						"in": "body",
+						"description": "User email",
+						"type": "string"
+					},
+					{
+						"name": "password",
+						"in": "body",
+						"description": "User password",
+						"type": "string"
+					}
+				],
+				"produces": ["application/json"],
+				"responses": {
+					"201": {
+						"description": "Success sign in",
+						"schema": {
+							"type": "object",
+							"example": {
+								"accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE2MDQ5MTEzNTAsImV4cCI6MTYwNDkxMTk1MH0.h3pqwmzekV97C2_w-EC-_ggliFr5yxuf95rTPTzhDvo",
+								"refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM4OGQ4N2UwLWNiY2MtNDhlNC1iYWQ3LTkzOTkxMjEyZjNjMiIsInR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNjA0OTExMzUwLCJleHAiOjE2MDQ5MTMxNTB9.rka1KnzzlDw6bvNgIRD6dLl8bqMLHxaM0Ck0KKRboHA"
+							}
+						}
+					}
+				}
+			}
+		},
+		"auth/signin/new_token": {
+			"post": {
+				"tags": ["Auth"],
+				"description": "Get new access token",
+				"parameters": [
+					{
+						"name": "refreshToken",
+						"in": "body",
+						"description": "Refresh token of previous session",
+						"type": "string"
+					}
+				],
+				"produces": ["application/json"],
+				"responses": {
+					"201": {
+						"description": "Success sign in",
+						"schema": {
+							"type": "object",
+							"example": {
+								"accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE2MDQ5MTEzNTAsImV4cCI6MTYwNDkxMTk1MH0.h3pqwmzekV97C2_w-EC-_ggliFr5yxuf95rTPTzhDvo",
+								"refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM4OGQ4N2UwLWNiY2MtNDhlNC1iYWQ3LTkzOTkxMjEyZjNjMiIsInR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNjA0OTExMzUwLCJleHAiOjE2MDQ5MTMxNTB9.rka1KnzzlDw6bvNgIRD6dLl8bqMLHxaM0Ck0KKRboHA"
+							}
+						}
+					}
+				}
+			}
+		},
+		"auth/info": {
+			"get": {
+				"tags": ["Auth"],
+				"description": "Get user data",
+				"parameters": [
+					{
+						"name": "Bearer Token",
+						"in": "header",
+						"description": "Access token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"produces": ["application/json"],
+				"responses": {
+					"201": {
+						"description": "Success got user data",
+						"schema": {
+							"type": "object",
+							"example": {
+								"accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE2MDQ5MTEzNTAsImV4cCI6MTYwNDkxMTk1MH0.h3pqwmzekV97C2_w-EC-_ggliFr5yxuf95rTPTzhDvo",
+								"refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM4OGQ4N2UwLWNiY2MtNDhlNC1iYWQ3LTkzOTkxMjEyZjNjMiIsInR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNjA0OTExMzUwLCJleHAiOjE2MDQ5MTMxNTB9.rka1KnzzlDw6bvNgIRD6dLl8bqMLHxaM0Ck0KKRboHA"
+							}
+						}
+					}
+				}
+			}
+		},
+
+		"auth/logout": {
+			"get": {
+				"tags": ["Auth"],
+				"description": "Logout",
+				"parameters": [
+					{
+						"name": "Bearer Token",
+						"in": "header",
+						"description": "Access token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"produces": ["application/json"],
+				"responses": {
+					"201": {
+						"description": "Success logout",
+						"schema": {
+							"type": "object",
+							"example": {
+								"accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE2MDQ5MTEzNTAsImV4cCI6MTYwNDkxMTk1MH0.h3pqwmzekV97C2_w-EC-_ggliFr5yxuf95rTPTzhDvo",
+								"refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM4OGQ4N2UwLWNiY2MtNDhlNC1iYWQ3LTkzOTkxMjEyZjNjMiIsInR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNjA0OTExMzUwLCJleHAiOjE2MDQ5MTMxNTB9.rka1KnzzlDw6bvNgIRD6dLl8bqMLHxaM0Ck0KKRboHA"
+							}
+						}
+					}
+				}
+			}
+		},
+
+		"files/upload": {
+			"post": {
+				"tags": ["Files"],
+				"description": "Upload file",
+				"parameters": [
+					{
+						"name": "Bearer Token",
+						"in": "header",
+						"description": "Access token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "file",
+						"in": "formData",
+						"description": "File to upload",
+						"type": "file"
+					}
+				],
+				"produces": ["application/json"],
+				"responses": {
+					"201": {
+						"description": "File uploaded",
+						"schema": {
+							"type": "object",
+							"example": {
+								"id": "8524205b-43d4-4291-a7f2-b0520cd13814",
+								"title": "90419444-c900-4674-bda1-a8c9e6738673",
+								"extension": "jpeg",
+								"mimeType": "image/jpeg",
+								"size": "165942",
+								"updatedAt": "2020-11-10T11:47:20.117Z",
+								"createdAt": "2020-11-10T11:47:20.117Z"
+							}
+						}
+					}
+				}
+			}
+		},
+		"files/update/:id": {
+			"put": {
+				"tags": ["Files"],
+				"description": "Update file",
+				"parameters": [
+					{
+						"name": "Bearer Token",
+						"in": "header",
+						"description": "Access token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"description": "File id",
+						"type": "string"
+					}
+				],
+				"produces": ["application/json"],
+				"responses": {
+					"201": {
+						"description": "File updated",
+						"schema": {
+							"type": "object",
+							"example": {
+								"id": "8524205b-43d4-4291-a7f2-b0520cd13814",
+								"title": "90419444-c900-4674-bda1-a8c9e6738673",
+								"extension": "jpeg",
+								"mimeType": "image/jpeg",
+								"size": "165942",
+								"updatedAt": "2020-11-10T11:47:20.117Z",
+								"createdAt": "2020-11-10T11:47:20.117Z"
+							}
+						}
+					}
+				}
+			}
+		},
+		"files/delete/:id": {
+			"delete": {
+				"tags": ["Files"],
+				"description": "Delete file",
+				"parameters": [
+					{
+						"name": "Bearer Token",
+						"in": "header",
+						"description": "Access token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"description": "File id",
+						"type": "string"
+					}
+				],
+				"produces": ["application/json"],
+				"responses": {
+					"200": {
+						"description": "File deleted",
+						"schema": {
+							"type": "object"
+						}
+					}
+				}
+			}
+		},
+		"files/download/:id": {
+			"get": {
+				"tags": ["Files"],
+				"description": "Download file",
+				"parameters": [
+					{
+						"name": "Bearer Token",
+						"in": "header",
+						"description": "Access token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"description": "File id",
+						"type": "string"
+					}
+				],
+				"produces": ["application/json"],
+				"responses": {
+					"200": {
+						"description": "File downloaded",
+						"schema": {
+							"type": "file"
+						}
+					}
+				}
+			}
+		},
+		"files/list": {
+			"get": {
+				"tags": ["Files"],
+				"description": "Get lis of files",
+				"parameters": [
+					{
+						"name": "Bearer Token",
+						"in": "header",
+						"description": "Access token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "page",
+						"in": "query",
+						"description": "Number of page",
+						"type": "string"
+					},
+					{
+						"name": "list_size",
+						"in": "query",
+						"description": "List size",
+						"type": "string"
+					}
+				],
+				"produces": ["application/json"],
+				"responses": {
+					"200": {
+						"description": "List of files",
+						"schema": {
+							"type": "object",
+							"example": {
+								"total": 7,
+								"data": [
+									{
+										"id": "b6ece23b-d925-4a03-8eb9-e16f51fb8837",
+										"title": "3908765a-7080-4d45-9f97-5002bfa1c90f",
+										"extension": "jpeg",
+										"mimeType": "image/jpeg",
+										"size": "165942",
+										"createdAt": "2020-11-10T12:50:20.173Z",
+										"updatedAt": "2020-11-10T12:50:20.173Z"
+									},
+									{
+										"id": "def1bdd1-27b7-47b8-8e89-13cd2f7e014b",
+										"title": "89d83ae1-7065-4ca9-a113-a688be5b548d",
+										"extension": "jpeg",
+										"mimeType": "image/jpeg",
+										"size": "165942",
+										"createdAt": "2020-11-10T12:50:20.883Z",
+										"updatedAt": "2020-11-10T12:50:20.883Z"
+									}
+								]
+							}
+						}
+					}
+				}
+			}
+		},
+		"files/:id": {
+			"get": {
+				"tags": ["Files"],
+				"description": "Get one file",
+				"parameters": [
+					{
+						"name": "Bearer Token",
+						"in": "header",
+						"description": "Access token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"description": "File id",
+						"type": "string"
+					}
+				],
+				"produces": ["application/json"],
+				"responses": {
+					"200": {
+						"description": "Get one file",
+						"schema": {
+							"type": "object",
+							"example": {
+								"id": "b6ece23b-d925-4a03-8eb9-e16f51fb8837",
+								"title": "3908765a-7080-4d45-9f97-5002bfa1c90f",
+								"extension": "jpeg",
+								"mimeType": "image/jpeg",
+								"size": "165942",
+								"createdAt": "2020-11-10T12:50:20.173Z",
+								"updatedAt": "2020-11-10T12:50:20.173Z"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

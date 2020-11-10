@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middleware/authMiddleware");
-const getPagination = require('../../utils/getPagination.util')
+const getPagination = require("../../utils/getPagination.util");
 const db = require("../../DB/models");
 const mime = require("mime");
 const File = db.fileInfo;
@@ -29,6 +29,7 @@ router.post("/upload", authMiddleware, async (req, res) => {
 
 	try {
 		const newFile = await File.create({
+			id: uuidv4(),
 			title: fileName,
 			extension: mime.getExtension(file.mimetype),
 			mimeType: file.mimetype,
@@ -107,17 +108,17 @@ router.put("/update/:id", authMiddleware, async (req, res) => {
 	}
 });
 
-router.get('/list', authMiddleware, async (req, res) => {
-    const { page, list_size } = req.query;
-    const { limit, offset } = getPagination.getPagination(page, list_size);
+router.get("/list", authMiddleware, async (req, res) => {
+	const { page, list_size } = req.query;
+	const { limit, offset } = getPagination.getPagination(page, list_size);
 
-    try {
-        const {count, rows} = await File.findAndCountAll({limit, offset});
-        res.status(201).json({total: count, data: rows});
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-})
+	try {
+		const { count, rows } = await File.findAndCountAll({ limit, offset });
+		res.status(201).json({ total: count, data: rows });
+	} catch (err) {
+		res.status(500).json({ message: err.message });
+	}
+});
 
 router.get("/:id", authMiddleware, async (req, res) => {
 	try {
